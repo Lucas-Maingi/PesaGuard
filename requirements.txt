@@ -1,0 +1,29 @@
+# Data Analysis and ML
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.2.0
+xgboost>=1.7.0
+feature-engine>=1.6.0
+joblib>=1.2.0
+shap>=0.42.0
+
+# API and Server
+fastapi>=0.95.0
+uvicorn>=0.22.0
+requests>=2.31.0
+
+# Database
+python-dotenv>=1.0.0
+
+# Visualization and Dashboard
+streamlit>=1.22.0
+plotly>=5.14.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Experiment Tracking
+mlflow>=2.3.0
+
+# Notebook Environment for EDA
+ipykernel>=6.23.0
+notebook>=6.5.0
