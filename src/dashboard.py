@@ -1,9 +1,14 @@
+import sys
+import os
+
+# Add project root to python path to prevent ModuleNotFoundError in Streamlit Cloud
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import time
 import requests
-import os
 import plotly.express as px
 import plotly.graph_objects as go
 from dotenv import load_dotenv
