@@ -7,6 +7,10 @@ feature-engine>=1.6.0
 joblib>=1.2.0
 shap>=0.42.0
 
+# Pin numba and llvmlite to prevent installer backtracking
+numba>=0.59.0
+llvmlite>=0.42.0
+
 # API and Server
 fastapi>=0.95.0
 uvicorn>=0.22.0
