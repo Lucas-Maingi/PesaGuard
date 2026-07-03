@@ -1,5 +1,9 @@
 # PesaGuard: Real-Time Mobile Money Fraud Detection System
 
+[![CI](https://github.com/Lucas-Maingi/PesaGuard/actions/workflows/ci.yml/badge.svg)](https://github.com/Lucas-Maingi/PesaGuard/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Docker](https://img.shields.io/badge/docker-compose%20ready-2496ED)
+
 PesaGuard is an enterprise-grade, low-latency Real-Time Fraud Detection System designed for international fintechs, African banks, and mobile money operators (such as M-Pesa, MTN MoMo, and Airtel Money). 
 
 The platform leverages a hybrid machine learning approach, combining a **supervised XGBoost classifier** (trained on SMOTE-oversampled transactions) with an **unsupervised Isolation Forest anomaly detector**. It scores incoming transactions in **under 100ms** and streams them to a visual operations console for human analysts.
