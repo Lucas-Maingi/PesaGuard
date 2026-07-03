@@ -1,0 +1,14 @@
+.git
+.venv
+__pycache__/
+*.pyc
+.devcontainer/
+.vscode/
+notebooks/
+mlruns/
+tests/
+scripts/
+data/pesaguard.db
+data/paysim_sample.csv
+.env
+*.md

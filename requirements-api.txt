@@ -1,0 +1,16 @@
+# Lean runtime dependencies for the scoring API container.
+# The full requirements.txt (dashboard, notebooks, MLflow) is not needed to serve scores.
+pandas>=2.0.0
+numpy>=1.24.0
+# sklearn.frozen.FrozenEstimator is required to unpickle the calibrated model
+scikit-learn>=1.6.0
+xgboost>=1.7.0
+shap>=0.42.0
+numba>=0.59.0
+llvmlite>=0.42.0
+joblib>=1.2.0
+fastapi>=0.95.0
+uvicorn>=0.22.0
+python-dotenv>=1.0.0
+# Supabase / PostgreSQL production database driver
+psycopg2-binary>=2.9.0
