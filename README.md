@@ -10,6 +10,18 @@ The platform leverages a hybrid machine learning approach, combining a **supervi
 
 ---
 
+## 🎥 Live Demo
+
+**▶️ Try it live:** https://huggingface.co/spaces/REPLACE_WITH_YOUR_HF_USERNAME/pesaguard
+
+The live demo runs the full stack — the FastAPI scoring API and the Streamlit analyst console — in a single always-on container.
+
+![PesaGuard analyst console](docs/demo.gif)
+
+> _Recording the GIF? See [`docs/HOW_TO_RECORD_DEMO.md`](docs/HOW_TO_RECORD_DEMO.md)._
+
+---
+
 ## 🏗️ System Architecture
 
 PesaGuard is designed for strict separation of concerns, featuring a stateless FastAPI backend and a dynamic database layer that supports SQLite for local development and Supabase (PostgreSQL) for production.
