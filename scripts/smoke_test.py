@@ -1,7 +1,9 @@
-import time
 import subprocess
-import requests
 import sys
+import time
+
+import requests
+
 
 def main():
     print("="*60)
@@ -87,7 +89,7 @@ def main():
             print("\nRISK EVALUATION CHECK:")
             print(f"  - Risk Tier: {res_data['risk_tier']}")
             print(f"  - Recommendation: {res_data['recommendation']}")
-            print(f"  - Top Explanation Signals:")
+            print("  - Top Explanation Signals:")
             for signal in res_data["top_signals"]:
                 print(f"    * [{signal['signal']}] (Impact: {signal['impact']}) - {signal['description']}")
         else:

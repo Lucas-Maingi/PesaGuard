@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np
+
 
 def run_eda():
     sample_path = "data/paysim_sample.csv"
@@ -17,7 +17,7 @@ def run_eda():
     total_tx = len(df)
     fraud_tx = df['isFraud'].sum()
     fraud_rate = (fraud_tx / total_tx) * 100
-    print(f"1. OVERALL FRAUD RATE:")
+    print("1. OVERALL FRAUD RATE:")
     print(f"   Total Transactions: {total_tx:,}")
     print(f"   Fraudulent Transactions: {fraud_tx:,}")
     print(f"   Fraud Rate: {fraud_rate:.4f}%\n")

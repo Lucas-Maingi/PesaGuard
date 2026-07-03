@@ -1,14 +1,17 @@
 import os
-import pandas as pd
-import numpy as np
+
 import joblib
-from xgboost import XGBClassifier
-from sklearn.ensemble import IsolationForest
-from sklearn.metrics import roc_auc_score, average_precision_score, classification_report
-from sklearn.calibration import CalibratedClassifierCV
-from sklearn.frozen import FrozenEstimator
+import numpy as np
+import pandas as pd
 from imblearn.over_sampling import SMOTE
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.ensemble import IsolationForest
+from sklearn.frozen import FrozenEstimator
+from sklearn.metrics import average_precision_score, classification_report, roc_auc_score
+from xgboost import XGBClassifier
+
 from src.features import PesaGuardFeaturePipeline
+
 
 def train_system():
     # 1. Load data
@@ -35,7 +38,7 @@ def train_system():
     val_df = df.iloc[train_idx:val_idx]
     test_df = df.iloc[val_idx:]
 
-    print(f"Splits:")
+    print("Splits:")
     print(f"  - Train: {len(train_df):,} rows (Steps {train_df['step'].min()} - {train_df['step'].max()}, Fraud: {train_df['isFraud'].sum()})")
     print(f"  - Val:   {len(val_df):,} rows (Steps {val_df['step'].min()} - {val_df['step'].max()}, Fraud: {val_df['isFraud'].sum()})")
     print(f"  - Test:  {len(test_df):,} rows (Steps {test_df['step'].min()} - {test_df['step'].max()}, Fraud: {test_df['isFraud'].sum()})")
@@ -81,7 +84,6 @@ def train_system():
     )
     xgb_weighted.fit(X_train_trans, y_train)
     
-    val_probs_weighted = xgb_weighted.predict_proba(X_val_trans)[:, 1]
     test_probs_weighted = xgb_weighted.predict_proba(X_test_trans)[:, 1]
     
     auc_weighted = roc_auc_score(y_test, test_probs_weighted)
@@ -90,7 +92,7 @@ def train_system():
     print(f"  Test PR-AUC (Average Precision): {pr_auc_weighted:.4f}")
 
     # Strategy B: SMOTE Oversampling
-    print(f"\nStrategy B: SMOTE oversampling on training split...")
+    print("\nStrategy B: SMOTE oversampling on training split...")
     try:
         smote = SMOTE(random_state=42)
         X_train_resampled, y_train_resampled = smote.fit_resample(X_train_trans, y_train)
@@ -105,7 +107,6 @@ def train_system():
         )
         xgb_smote.fit(X_train_resampled, y_train_resampled)
         
-        val_probs_smote = xgb_smote.predict_proba(X_val_trans)[:, 1]
         test_probs_smote = xgb_smote.predict_proba(X_test_trans)[:, 1]
         
         auc_smote = roc_auc_score(y_test, test_probs_smote)
@@ -122,9 +123,9 @@ def train_system():
     if pr_auc_smote > pr_auc_weighted:
         best_strategy = "SMOTE XGBoost"
         best_xgb = xgb_smote
-        print(f"\nSMOTE worked better than scale_pos_weight.")
+        print("\nSMOTE worked better than scale_pos_weight.")
     else:
-        print(f"\nscale_pos_weight worked better than SMOTE.")
+        print("\nscale_pos_weight worked better than SMOTE.")
         
     print(f"Selected strategy for production: {best_strategy}")
     print("="*50)
@@ -152,7 +153,7 @@ def train_system():
     
     final_auc = roc_auc_score(y_test, ensemble_scores)
     final_pr_auc = average_precision_score(y_test, ensemble_scores)
-    print(f"Final Ensemble Test metrics:")
+    print("Final Ensemble Test metrics:")
     print(f"  - ROC-AUC: {final_auc:.4f}")
     print(f"  - PR-AUC (Average Precision): {final_pr_auc:.4f}")
 

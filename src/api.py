@@ -1,13 +1,12 @@
 import time
-import os
-from typing import List, Dict, Any
+from typing import List
+
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
 
 # Import our custom modules
-from src.db import init_db, log_transaction, log_feedback, get_user_history, get_db_stats
-from src.features import PesaGuardFeaturePipeline
+from src.db import get_db_stats, get_user_history, init_db, log_feedback, log_transaction
 from src.models import PesaGuardEnsemble
 
 load_dotenv()
