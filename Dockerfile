@@ -1,29 +1,33 @@
-# PesaGuard scoring API
+# PesaGuard — full-stack demo image for Hugging Face Spaces.
+# Runs the FastAPI scoring API (localhost:8000) AND the Streamlit analyst
+# console (public port 7860) in a single container via start.sh.
+#
+# NOTE: This is the Space/demo image and lives only on the `huggingface`
+# branch. The lean API-only image used by CI lives on `main`.
 FROM python:3.12-slim
 
 WORKDIR /app
 
-# libgomp1 provides libgomp.so.1, the OpenMP runtime that the XGBoost native
-# library loads at import time. python:*-slim does not ship it, so install it
-# explicitly rather than relying on the wheel to vendor a copy.
+# libgomp1: OpenMP runtime required by XGBoost. curl: used by the healthcheck loop.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libgomp1 \
+    && apt-get install -y --no-install-recommends libgomp1 curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies first to maximize Docker layer caching
-COPY requirements-api.txt .
-RUN pip install --no-cache-dir -r requirements-api.txt
+# Full dependencies (dashboard + API + model libraries)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Application code + trained model artifacts
 COPY src/ src/
 COPY models/ models/
+COPY data/paysim_test_sample.csv data/paysim_test_sample.csv
+COPY start.sh .
 
-# Holds the runtime SQLite database when SUPABASE_DB_URL is not set
-RUN mkdir -p data
+# Writable locations for the SQLite fallback DB and Streamlit's home dir
+# (Hugging Face may run the container as a non-root user).
+RUN mkdir -p data && chmod -R 777 data && chmod +x start.sh
+ENV HOME=/tmp
+ENV API_URL=http://127.0.0.1:8000
 
-EXPOSE 8000
+EXPOSE 7860
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=20s \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"
-
-CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./start.sh"]
