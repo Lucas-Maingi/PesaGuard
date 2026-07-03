@@ -114,6 +114,16 @@ Opens the visual UI in your web browser.
 streamlit run src/dashboard.py
 ```
 
+### 🐳 Alternative: Run the Full Stack with Docker Compose
+Builds a lean scoring-API image (from `requirements-api.txt`) and a dashboard image, wired together on an internal network:
+```bash
+docker compose up --build
+```
+*   API: `http://localhost:8000` (interactive docs at `/docs`)
+*   Dashboard: `http://localhost:8501`
+
+Set `SUPABASE_DB_URL` in your environment (or a `.env` file) to switch the API from container-local SQLite to PostgreSQL.
+
 ---
 
 ## 🔌 API Documentation & Example Calls
