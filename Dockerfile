@@ -3,6 +3,13 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# libgomp1 provides libgomp.so.1, the OpenMP runtime that the XGBoost native
+# library loads at import time. python:*-slim does not ship it, so install it
+# explicitly rather than relying on the wheel to vendor a copy.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install dependencies first to maximize Docker layer caching
 COPY requirements-api.txt .
 RUN pip install --no-cache-dir -r requirements-api.txt
