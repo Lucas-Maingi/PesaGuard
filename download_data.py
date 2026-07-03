@@ -1,7 +1,9 @@
 import os
-import zipfile
 import urllib.request
+import zipfile
+
 import pandas as pd
+
 
 def main():
     zip_url = "https://storage.googleapis.com/spls/gsp774/archive.zip"
@@ -66,7 +68,7 @@ def main():
         # Log basic statistics
         fraud_count = df_chunk['isFraud'].sum()
         total_count = len(df_chunk)
-        print(f"Sample statistics:")
+        print("Sample statistics:")
         print(f"  - Total transactions: {total_count}")
         print(f"  - Fraudulent transactions: {fraud_count} ({fraud_count/total_count*100:.3f}%)")
         print(f"  - Transaction types: {df_chunk['type'].value_counts().to_dict()}")
