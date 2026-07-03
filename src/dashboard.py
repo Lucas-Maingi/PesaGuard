@@ -1,23 +1,34 @@
-import sys
 import os
+import sys
 
 # Add project root to python path to prevent ModuleNotFoundError in Streamlit Cloud
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import streamlit as st
-import pandas as pd
-import numpy as np
 import time
-import requests
+
+import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import requests
+import streamlit as st
 from dotenv import load_dotenv
 
 # Import database module for fallback/stats
-from src.db import get_db_stats, log_feedback, get_connection
+from src.db import get_db_stats, log_feedback
 from src.features import PesaGuardFeaturePipeline
+from src.models import PesaGuardEnsemble
 
 load_dotenv()
+
+
+@st.cache_resource
+def load_ensemble() -> PesaGuardEnsemble:
+    """Load model artifacts once per server process for local (non-API) scoring paths."""
+    return PesaGuardEnsemble(models_dir="models")
+
+
+ensemble = load_ensemble()
 
 # Page configuration
 st.set_page_config(
@@ -352,7 +363,7 @@ with tabs[0]:
                 else:
                     row = test_data.iloc[st.session_state.current_index]
                 
-                scored = score_row(row)
+                scored = score_transaction_payload(row)
                 full_tx = {**row.to_dict(), **scored}
                 
                 lat, lon, city = get_mock_coordinates(row["nameDest"])
