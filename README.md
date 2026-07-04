@@ -12,7 +12,7 @@ The platform leverages a hybrid machine learning approach, combining a **supervi
 
 ## 🎥 Live Demo
 
-**▶️ Try it live:** https://huggingface.co/spaces/REPLACE_WITH_YOUR_HF_USERNAME/pesaguard
+**▶️ Try it live:** https://huggingface.co/spaces/lucas-maingi/pesaguard
 
 The live demo runs the full stack — the FastAPI scoring API and the Streamlit analyst console — in a single always-on container.
 
