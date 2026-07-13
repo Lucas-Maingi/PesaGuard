@@ -16,9 +16,7 @@ The platform leverages a hybrid machine learning approach, combining a **supervi
 
 The live demo runs the full stack — the FastAPI scoring API and the Streamlit analyst console — in a single always-on container.
 
-![PesaGuard analyst console](docs/demo.gif)
-
-> _Recording the GIF? See [`docs/HOW_TO_RECORD_DEMO.md`](docs/HOW_TO_RECORD_DEMO.md)._
+<!-- Demo GIF pending: shot list in docs/HOW_TO_RECORD_DEMO.md. Do not reference the file until it exists - a broken image is worse than none. -->
 
 ---
 
