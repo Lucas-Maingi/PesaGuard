@@ -206,3 +206,15 @@ curl -X POST http://127.0.0.1:8000/feedback \
   "feedback_notes": "Customer confirmed unauthorized transfer, SIM swap suspected."
 }'
 ```
+
+---
+
+## 📚 Technical Deep Dives
+
+- **[Model performance report](docs/model-report.md)** — score-separation analysis on the bundled held-out sample, the threshold plateau (and the recall cliff at 0.75), and what the repo does and doesn't let you verify.
+- **[Feature engineering](docs/feature-engineering.md)** — why each of the 17 features exists, the no-future-leakage discipline, and the offline/online parity design that prevents training/serving skew.
+- **[Production deployment](docs/deployment.md)** — Supabase switch-over, retraining cadence, scaling shape, score-drift monitoring, and the honest list of what a real operator pilot still needs.
+
+## 📝 License
+
+MIT — see [LICENSE](LICENSE).
