@@ -207,6 +207,23 @@ curl -X POST http://127.0.0.1:8000/feedback \
 
 ---
 
+## 🌍 Part of an Ecosystem
+
+PesaGuard **protects** Kenya's mobile-money economy;
+[**Mizani**](https://github.com/Lucas-Maingi/mizani) **measures** it — a medallion
+ETL platform (Dagster · dbt · DuckDB) over Central Bank of Kenya, World Bank, and GSMA
+data, running on a weekly schedule and publishing to GitHub Pages.
+
+The two are wired together for real: the analyst console's **Kenya Market Context**
+panel consumes Mizani's machine-readable feed
+([`data/latest.json`](https://lucas-maingi.github.io/mizani/data/latest.json)) —
+live mobile-money account/agent counts, monthly agent cash-in/cash-out value, and the
+official KES/USD rate, each labeled with its own `as_of` date. The integration is
+fail-open: if the feed is unreachable the console runs standalone
+(`src/market_context.py` never raises; see `tests/test_market_context.py`).
+
+---
+
 ## 📚 Technical Deep Dives
 
 - **[Model performance report](docs/model-report.md)** — score-separation analysis on the bundled held-out sample, the threshold plateau (and the recall cliff at 0.75), and what the repo does and doesn't let you verify.

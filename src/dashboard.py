@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 # Import database module for fallback/stats
 from src.db import get_db_stats, log_feedback
 from src.features import PesaGuardFeaturePipeline
+from src.market_context import fetch_market_context, summarize
 from src.models import PesaGuardEnsemble
 
 load_dotenv()
@@ -211,6 +212,50 @@ elif data_source == "Developer Integration API":
     st.sidebar.text_input("Tenant Domain ID", "lucas-maingi-pesaguard", disabled=True)
     st.sidebar.text_input("Live API Access Key", "pk_live_51PesaGuardKeyXYZ789", type="password", disabled=True)
     st.sidebar.info("Use these credentials to connect your mobile wallet system directly to PesaGuard's REST endpoints.")
+
+# Kenya market context - live from the Mizani data platform
+# (https://github.com/Lucas-Maingi/mizani). Cached for an hour; the
+# console works fully offline and degrades to a caption if unreachable.
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_market_context():
+    return fetch_market_context()
+
+
+st.sidebar.markdown("---")
+with st.sidebar.expander("🌍 Kenya Market Context", expanded=False):
+    _ctx_feed = get_market_context()
+    if _ctx_feed is None:
+        st.caption(
+            "Market feed unreachable — console running standalone. Context is "
+            "published by [Mizani](https://github.com/Lucas-Maingi/mizani) on "
+            "its weekly pipeline runs."
+        )
+    else:
+        _ctx = summarize(_ctx_feed)
+        mc1, mc2 = st.columns(2)
+        mc1.metric("MM accounts", f"{_ctx['accounts_millions']:.1f}M")
+        mc2.metric("Active agents", f"{_ctx['active_agents']:,}")
+        st.metric(
+            "Agent cash-in/out, monthly",
+            f"KSh {_ctx['cico_value_ksh_billions']:.0f}B",
+            help=f"As of {_ctx['mm_as_of'][:7]} (Central Bank of Kenya)",
+        )
+        st.metric(
+            "KES per USD",
+            f"{_ctx['kes_per_usd']:.2f}",
+            help=f"CBK official mean rate, as of {_ctx['fx_as_of']} — the "
+                 "published historical file lags; the feed labels every value "
+                 "with its own as-of date.",
+        )
+        if _ctx["cico_trend"]:
+            st.line_chart(_ctx["cico_trend"], height=90)
+            st.caption("Cash-in/cash-out value, last 12 months (KSh billions)")
+        st.caption(
+            f"Live from [Mizani](https://lucas-maingi.github.io/mizani/), "
+            f"built {_ctx['generated_at'][:10]}"
+        )
 
 # Load validation test dataset
 sample_path = "data/paysim_test_sample.csv"
