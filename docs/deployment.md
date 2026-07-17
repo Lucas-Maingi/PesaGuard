@@ -52,3 +52,23 @@ Standard infra metrics aside, fraud systems need **score-distribution monitoring
 - **Authentication on the scoring API** — currently open; a pilot needs at minimum API-key auth and per-client rate limits.
 - **PII handling** — PaySim IDs are synthetic; real MSISDNs mean encryption at rest, masked logs, and a data-retention policy before any regulator asks.
 - **Feedback loop plumbing** — the `/feedback` endpoint exists; wiring it to the analysts' case-management outcome (confirmed fraud / false alarm) is what makes monthly retrains actually improve.
+
+
+## Deploying to the Hugging Face Space
+
+The live demo is a separate git remote (`space`) whose history is an unrelated
+squashed snapshot carrying HF-specific files (the full-stack `Dockerfile` on port
+7860 and a front-matter `README.md`). **Never merge `main` into it** — overlay the
+changed files instead:
+
+```bash
+git fetch space main
+git switch -c hf-deploy space/main
+git checkout main -- src/... tests/...   # only the files that changed
+git commit -m "deploy: <what changed>"
+git push space hf-deploy:main
+git switch main && git branch -D hf-deploy
+```
+
+The Space rebuilds automatically on push (takes a few minutes). Verify with
+`curl -s -o /dev/null -w "%{http_code}" https://lucas-maingi-pesaguard.hf.space/`.

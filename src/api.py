@@ -1,4 +1,5 @@
 import time
+from contextlib import asynccontextmanager
 from typing import List
 
 from dotenv import load_dotenv
@@ -12,14 +13,26 @@ from src.models import PesaGuardEnsemble
 load_dotenv()
 
 # Initialize FastAPI App
+# Initialize and load model ensemble
+ensemble = PesaGuardEnsemble(models_dir="models")
+
+
+# Database startup hook (lifespan replaces the deprecated on_event)
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    # Automatically initialize DB tables if they don't exist
+    init_db()
+    # Reload models in case they were updated
+    ensemble.load_models()
+    yield
+
+
 app = FastAPI(
     title="PesaGuard Fraud Detection Service",
     description="Production-grade REST API for scoring mobile money transactions in real-time.",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan,
 )
-
-# Initialize and load model ensemble
-ensemble = PesaGuardEnsemble(models_dir="models")
 
 # Pydantic schemas
 class TransactionPayload(BaseModel):
@@ -41,14 +54,6 @@ class FeedbackPayload(BaseModel):
     transaction_id: str = Field(..., description="Transaction ID being flagged")
     is_fraud_feedback: int = Field(..., description="1 if true fraud, 0 if legitimate", ge=0, le=1)
     feedback_notes: str | None = Field("", description="Optional notes from the analyst")
-
-# Database startup hook
-@app.on_event("startup")
-def startup_event():
-    # Automatically initialize DB tables if they don't exist
-    init_db()
-    # Reload models in case they were updated
-    ensemble.load_models()
 
 @app.get("/health", status_code=status.HTTP_200_OK)
 def health_check():
@@ -77,7 +82,7 @@ def score_transaction(payload: TransactionPayload):
             detail="Model weights are not loaded. Please train the system first."
         )
 
-    tx_dict = payload.dict()
+    tx_dict = payload.model_dump()
     name_orig = tx_dict["nameOrig"]
 
     try:

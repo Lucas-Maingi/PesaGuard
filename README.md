@@ -16,7 +16,7 @@ The platform leverages a hybrid machine learning approach, combining a **supervi
 
 The live demo runs the full stack — the FastAPI scoring API and the Streamlit analyst console — in a single always-on container.
 
-<!-- Demo GIF pending: shot list in docs/HOW_TO_RECORD_DEMO.md. Do not reference the file until it exists - a broken image is worse than none. -->
+![PesaGuard operations console — the Kenya Market Context panel (bottom left) is fed live by the Mizani data platform](docs/img/console.png)
 
 ---
 
